@@ -26,6 +26,14 @@ RUN apt-get update && apt-get install -y xvfb && rm -rf /var/lib/apt/lists/*
 WORKDIR /home/ros
 COPY . /home/ros/ros_bridge
 
+# ---- 여기부터 run_ros.sh 추가 ----
+# run_ros.sh를 이미지 안으로 복사
+COPY run_ros.sh /home/ros/run_ros.sh
+
+# 실행 권한 부여
+RUN chmod +x /home/ros/run_ros.sh
+# ---- run_ros.sh 관련 끝 ----
+
 # Modify launch file to disable gazebo gui
 RUN sed -i 's/launch_arguments={"world": world_file_path}/launch_arguments={"world": world_file_path, "gui": "false"}/g' /home/ros/ros_bridge/summit.launch.py
 

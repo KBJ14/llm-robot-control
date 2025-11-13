@@ -29,6 +29,11 @@ All three services are orchestrated through `docker-compose.yml`, sharing an int
 - Sufficient disk space for the RAP simulation assets and optional Qwen model weights.
 - (Optional) Hugging Face access token configured via environment variable or cached credentials if you want to run the transformer model locally.
 
+## Scripts
+
+- `up.sh`: Host script to start containers and launch ROS2 + Gazebo + Summit XL inside the `ros2_gazebo_container`.
+- `services/ros_bridge/run_ros.sh`: Container script to set up ROS environment and launch the Summit XL simulation.
+
 ## Configuration
 
 Environment variables can be tweaked in `docker-compose.yml` or an accompanying `.env` file:
@@ -45,9 +50,9 @@ Environment variables can be tweaked in `docker-compose.yml` or an accompanying 
    ```bash
    docker compose build
    ```
-3. Start the stack:
+3. Start the stack using the provided script:
    ```bash
-   docker compose up
+   ./up.sh
    curl -I http://localhost:8200
    ```
 4. Services become available on the host:
