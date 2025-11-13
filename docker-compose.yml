@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  ros2_gazebo_container:
+    build: ./services/ros_bridge
+    container_name: ros2_gazebo
+    environment:
+      - USE_SLAM=False
+      - ROS_DOMAIN_ID=42
+    ports:
+      - "8000:8000"  # FastAPI bridge
+    # If simulation needs GUI/X11 adapt here; default headless
+    stdin_open: true
+    tty: true
+
+  llm_container:
+    build: ./services/llm_service
+    container_name: llm_service
+    environment:
+      - HF_HOME=/hf-cache
+    volumes:
+      - ./hf-cache:/hf-cache
+    ports:
+      - "8100:8100"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+
+  web_ui_container:
+    build: ./services/web_ui
+    container_name: web_ui
+    environment:
+      - ROS_BRIDGE_URL=http://ros2_gazebo:8000
+      - LLM_SERVICE_URL=http://llm_service:8100
+    ports:
+      - "8200:8200"
+
+networks:
+  default:
+    name: llm-robot-net
