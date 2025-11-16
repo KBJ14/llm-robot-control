@@ -1,0 +1,9 @@
+{
+    "tools": [
+        {"name": "navigate_to", "description": "Navigate to a location", "parameters": {"location": "string"}},
+        {"name": "move_forward", "description": "Move forward by distance", "parameters": {"distance_m": "float"}},
+        {"name": "rotate", "description": "Rotate by angle", "parameters": {"angle_deg": "float"}},
+        {"name": "stop", "description": "Stop the robot"},
+        {"name": "reset_world", "description": "Reset the simulation world"}
+    ]
+}

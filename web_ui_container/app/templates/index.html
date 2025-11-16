@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LLM Robot Control</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>LLM Robot Control</h1>
+
+    <div>
+        <h2>LLM Prompt</h2>
+        <form id="promptForm">
+            {% csrf_token %}
+            <textarea name="prompt" placeholder="Enter LLM prompt" rows="4" cols="50"></textarea><br>
+            <button type="submit">Send to LLM</button>
+        </form>
+        <div id="llmResponse"></div>
+    </div>
+
+    <div>
+        <h2>Robot Action</h2>
+        <form id="actionForm">
+            {% csrf_token %}
+            <textarea name="action" placeholder="Enter robot action JSON or paste from LLM output" rows="4" cols="50"></textarea><br>
+            <button type="submit">Send Action to Gazebo</button>
+        </form>
+        <div id="actionResponse"></div>
+    </div>
+
+    <div>
+        <h2>Robot Status</h2>
+        <button id="getStatus">Get Robot Status</button>
+        <div id="robotStatus"></div>
+    </div>
+
+    <div>
+        <h2>Available Actions</h2>
+        <ul>
+            {% for action in actions %}
+                <li><strong>{{ action.name }}</strong>: {{ action.description }}<br>
+                <em>Example:</em> <code>{{ action.example }}</code></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        $('#promptForm').submit(function(e) {
+            e.preventDefault();
+            $.post('/send_prompt/', $(this).serialize(), function(data) {
+                $('#llmResponse').html('<p>Response: ' + data.llm_response + '</p><p>Tool Call: ' + JSON.stringify(data.tool_call) + '</p>');
+            });
+        });
+
+        $('#actionForm').submit(function(e) {
+            e.preventDefault();
+            $.post('/send_action/', $(this).serialize(), function(data) {
+                $('#actionResponse').html('<p>Observation: ' + JSON.stringify(data.observation) + '</p>');
+            });
+        });
+
+        $('#getStatus').click(function() {
+            $.get('/get_robot_status/', function(data) {
+                $('#robotStatus').html('<p>Status: ' + JSON.stringify(data.robot_status) + '</p>');
+            });
+        });
+    </script>
+</body>
+</html>

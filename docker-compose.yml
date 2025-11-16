@@ -1,0 +1,41 @@
+services:
+  ros2_gazebo:
+    build: ./ros2_gazebo_container
+    container_name: ros2_gazebo_container
+    ports:
+      - "8080:8080"
+    networks:
+      - robot_net
+    environment:
+      - TURTLEBOT3_MODEL=waffle_pi   # 👈 TB3 모델 여기서 고정
+      - GAZEBO_GUI=false              # 기본: GUI 비활성화 (headless)
+      - GAZEBO_HEADLESS=true
+      - GAZEBO_SPAWN_DELAY=0.0
+      - GAZEBO_WAIT_FOR_SPAWN=false
+      - GAZEBO_WAIT_TIMEOUT=10.0
+
+  llm:
+    build: ./llm_container
+    container_name: llm_container
+    ports:
+      - "8001:8001"
+    depends_on:
+      - ros2_gazebo
+    networks:
+      - robot_net
+    volumes:
+      - /models/huggingface_cache:/root/.cache/huggingface
+
+  web_ui:
+    build: ./web_ui_container
+    container_name: web_ui_container
+    ports:
+      - "8002:8000"
+    depends_on:
+      - llm
+    networks:
+      - robot_net
+
+networks:
+  robot_net:
+    driver: bridge

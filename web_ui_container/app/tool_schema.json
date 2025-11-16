@@ -1,0 +1,9 @@
+{
+    "tools": [
+        {"name": "navigate_to", "description": "Navigate to a location", "parameters": {"location": "string"}, "example": "{\"name\": \"navigate_to\", \"parameters\": {\"location\": \"kitchen\"}}"},
+        {"name": "move_forward", "description": "Move forward by distance", "parameters": {"distance_m": "float"}, "example": "{\"name\": \"move_forward\", \"parameters\": {\"distance_m\": 1.5}}"},
+        {"name": "rotate", "description": "Rotate by angle", "parameters": {"angle_deg": "float"}, "example": "{\"name\": \"rotate\", \"parameters\": {\"angle_deg\": 90}}"},
+        {"name": "stop", "description": "Stop the robot", "example": "{\"name\": \"stop\"}"},
+        {"name": "reset_world", "description": "Reset the simulation world", "example": "{\"name\": \"reset_world\"}"}
+    ]
+}
